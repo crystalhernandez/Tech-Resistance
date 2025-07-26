@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U.S. Citizenship Test Prep</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="#" class="logo" onclick="showScreen('home')">
+                <div class="logo-icon"></div>
+                <span>Citizenship Prep</span>
+            </a>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" onclick="showScreen('home')">Home</a>
+                <a href="#" class="nav-link" onclick="showScreen('practice')">Practice Test</a>
+                <a href="#" class="nav-link" onclick="showScreen('topics')">Study Topics</a>
+                <a href="#" class="nav-link">About</a>
+                <button class="language-selector" id="language-select">
+                    <span>English</span>
+                    <span>▼</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Home Screen -->
+    <div class="screen active" id="home">
+        <main class="main-content">
+            <section class="hero-section">
+                <div class="hero-content">
+                    <h1 class="hero-title">Master Your U.S. Citizenship Test</h1>
+                    <p class="hero-description">
+                        Practice with real questions, get instant feedback,<br>
+                        track your score, and build confidence for your exam.<br>
+                        Completely free and accessible to everyone.
+                    </p>
+                    
+                    <div class="cta-buttons">
+                        <button class="btn btn-primary" onclick="startPracticeTest()">
+                            Start Practice
+                        </button>
+                        <button class="btn btn-secondary" onclick="showScreen('topics')">
+                            Study By Topic
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Practice Test Screen -->
+    <div class="screen" id="practice">
+        <div class="test-container">
+            <div class="question-counter" id="question-counter">Question 1 of 10</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="test-progress" style="width: 10%"></div>
+            </div>
+
+            <div class="question-card">
+                <button class="audio-btn" onclick="speakQuestion()" title="Listen to question">🔊</button>
+                <div class="question-text" id="question-text">
+                    Loading question...
+                </div>
+                
+                <div class="answers-grid" id="answers-grid">
+                    <!-- Answer options will be dynamically populated -->
+                </div>
+            </div>
+
+            <div class="test-navigation">
+                <button class="btn btn-secondary" onclick="previousQuestion()" id="prev-btn">← Previous</button>
+                <button class="btn btn-secondary" onclick="pauseTest()">Pause Test</button>
+                <button class="btn btn-primary" onclick="nextQuestion()" id="next-btn">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Study Topics Screen -->
+    <div class="screen" id="topics">
+        <div class="topics-container">
+            <div class="page-header">
+                <h1 class="page-title">Study Topics</h1>
+                <p class="page-description">Choose a specific topic to focus your practice, or take a full mixed test</p>
+            </div>
+            
+            <!-- All Topics Button -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <button class="btn btn-primary" onclick="startPracticeTest()" style="min-width: 250px;">
+                    📝 Take Full Mixed Test (All Topics)
+                </button>
+            </div>
+            
+            <!-- Topics Grid - Will be populated dynamically -->
+            <div class="topics-grid" id="topics-grid">
+                <!-- Topic cards will be populated by JavaScript -->
+            </div>
+            
+            <!-- Topic Statistics -->
+            <div class="topic-stats" style="margin-top: 40px; text-align: center; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <h3 style="color: #1e293b; margin-bottom: 15px;">📊 Study Tips</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div>
+                        <strong>🎯 Focused Practice:</strong><br>
+                        <small>Study one topic at a time to master specific areas</small>
+                    </div>
+                    <div>
+                        <strong>🔄 Mixed Practice:</strong><br>
+                        <small>Take full tests to simulate the real exam experience</small>
+                    </div>
+                    <div>
+                        <strong>📈 Track Progress:</strong><br>
+                        <small>Practice weak areas more frequently</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Screen (shown while CSV loads) -->
+    <div class="screen" id="loading">
+        <div style="text-align: center; padding: 100px 20px;">
+            <h2>Loading Questions...</h2>
+            <p style="margin-top: 20px; color: #64748b;">Please wait while we load the citizenship test questions from your database.</p>
+            <div style="margin-top: 30px;">
+                <div class="progress-bar" style="max-width: 300px; margin: 0 auto;">
+                    <div class="progress-fill" style="width: 100%; animation: pulse 2s infinite;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Screen (shown if CSV fails to load) -->
+    <div class="screen" id="error">
+        <div style="text-align: center; padding: 100px 20px;">
+            <h2 style="color: #e74c3c;">⚠️ Error Loading Questions</h2>
+            <p style="margin-top: 20px; color: #64748b; max-width: 500px; margin-left: auto; margin-right: auto;">
+                We couldn't load the questions from your <code>questions.csv</code> file. 
+                Please make sure the file is in the same folder as <code>index.html</code> and try refreshing the page.
+            </p>
+            <div style="margin-top: 30px;">
+                <button class="btn btn-primary" onclick="location.reload()">
+                    🔄 Refresh Page
+                </button>
+                <button class="btn btn-secondary" onclick="showScreen('home')" style="margin-left: 10px;">
+                    🏠 Go to Home
+                </button>
+            </div>
+            <div style="margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <h4 style="color: #495057; margin-bottom: 15px;">Troubleshooting Tips:</h4>
+                <ul style="text-align: left; color: #6c757d; line-height: 1.6;">
+                    <li>Ensure <code>questions.csv</code> is in the same folder as <code>index.html</code></li>
+                    <li>Check that the file is named exactly <code>questions.csv</code> (lowercase)</li>
+                    <li>If using a local server, make sure it's running properly</li>
+                    <li>Try opening the page using <code>http://localhost</code> instead of <code>file://</code></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+    <!-- Add some additional CSS for loading animations -->
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .topic-card.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .topics-grid {
+            min-height: 200px;
+        }
+        
+        code {
+            background: #f1f3f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        /* Enhanced topic card styles */
+        .topic-card {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .topic-card:hover::before {
+            left: 100%;
+        }
+        
+        .topic-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+    </style>
+</body>
+</html>
+
